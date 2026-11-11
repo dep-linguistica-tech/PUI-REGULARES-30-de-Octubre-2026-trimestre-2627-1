@@ -3,155 +3,190 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consulta de Resultados - Prueba de Nivelación</title>
+    <title>UNIMET - Consulta de Resultados</title>
     <style>
-        :root {
-            --primary: #004085;
-            --bg: #f4f6f9;
-            --card: #ffffff;
-            --text: #333333;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
         }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            margin: 0;
-            padding: 20px;
+            background-color: #f0f2f5;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
-        .container {
-            background-color: var(--card);
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            max-width: 600px;
+        .card {
+            background: #ffffff;
             width: 100%;
+            max-width: 480px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            position: relative;
         }
-        h1 {
-            color: var(--primary);
-            font-size: 24px;
+        .top-bar {
+            height: 10px;
+            background-color: #f26522;
+        }
+        .card-body {
+            padding: 40px 30px;
             text-align: center;
-            margin-bottom: 20px;
         }
-        .search-box {
-            display: flex;
-            gap: 10px;
+        .logo-title {
+            color: #f26522;
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+        }
+        .sub-title {
+            color: #0b2545;
+            font-size: 15px;
+            font-weight: 700;
+            line-height: 1.4;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+        .term-title {
+            color: #0b2545;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 25px;
+        }
+        .form-group {
             margin-bottom: 20px;
         }
         input[type="text"] {
-            flex: 1;
-            padding: 12px;
-            border: 2px solid #ddd;
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #cccccc;
             border-radius: 6px;
-            font-size: 16px;
+            font-size: 15px;
+            text-align: center;
             outline: none;
+            transition: border-color 0.2s;
+            color: #333;
         }
         input[type="text"]:focus {
-            border-color: var(--primary);
+            border-color: #f26522;
         }
         button {
-            padding: 12px 20px;
-            background-color: var(--primary);
-            color: white;
+            width: 100%;
+            padding: 12px;
+            background-color: #f26522;
+            color: #ffffff;
             border: none;
             border-radius: 6px;
             font-size: 16px;
+            font-weight: 600;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: background-color 0.2s;
         }
         button:hover {
-            background-color: #002752;
+            background-color: #d9531e;
         }
-        .result-card {
-            margin-top: 20px;
+        .result-box {
+            margin-top: 25px;
             padding: 20px;
-            border: 1px solid #e0e0e0;
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
             border-radius: 8px;
-            background-color: #fdfdfd;
+            text-align: left;
             display: none;
         }
         .result-item {
-            margin-bottom: 12px;
-            font-size: 16px;
+            margin-bottom: 10px;
+            font-size: 15px;
+            color: #495057;
+        }
+        .result-item:last-child {
+            margin-bottom: 0;
         }
         .result-item strong {
-            color: #555;
+            color: #212529;
         }
         .badge {
             display: inline-block;
-            padding: 6px 12px;
+            padding: 4px 10px;
             background-color: #28a745;
-            color: white;
+            color: #ffffff;
             border-radius: 4px;
             font-weight: bold;
         }
-        .no-result {
-            color: #d9534f;
-            text-align: center;
+        .error-msg {
             margin-top: 15px;
+            color: #dc3545;
+            font-size: 14px;
+            font-weight: 600;
             display: none;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>Consulta de Resultados de Ubicación</h1>
-    <div class="search-box">
-        <input type="text" id="searchInput" placeholder="Ingrese Cédula, Nombre o Apellido...">
-        <button onclick="buscar()">Buscar</button>
-    </div>
+<div class="card">
+    <div class="top-bar"></div>
+    <div class="card-body">
+        <div class="logo-title">UNIMET</div>
+        <div class="sub-title">PUI REGULARES 30 DE OCTUBRE</div>
+        <div class="term-title">TRIMESTRE 2627-1</div>
 
-    <div id="noResult" class="no-result">No se encontraron registros con el criterio ingresado.</div>
+        <div class="form-group">
+            <input type="text" id="cedulaInput" placeholder="Ingrese su Cédula">
+        </div>
+        <button onclick="consultar()">Consultar</button>
 
-    <div id="resultCard" class="result-card">
-        <div class="result-item"><strong>Estudiante:</strong> <span id="resNombre"></span></div>
-        <div class="result-item"><strong>Cédula:</strong> <span id="resCedula"></span></div>
-        <div class="result-item"><strong>Nivel a Cursar:</strong> <span id="resCursar" class="badge"></span></div>
+        <div id="errorMsg" class="error-msg">Cédula no encontrada en el sistema.</div>
+
+        <div id="resultBox" class="result-box">
+            <div class="result-item"><strong>Nombre:</strong> <span id="resNombre"></span></div>
+            <div class="result-item"><strong>Apellido:</strong> <span id="resApellido"></span></div>
+            <div class="result-item"><strong>Nivel a Cursar:</strong> <span id="resNivel" class="badge"></span></div>
+        </div>
     </div>
 </div>
 
 <script>
-    // Carga de datos de los 107 estudiantes desde resultados.json
     let estudiantes = [];
 
+    // Cargar los 107 datos del archivo JSON
     fetch('resultados.json')
-        .then(response => response.json())
+        .then(res => res.json())
         .then(data => { estudiantes = data; })
-        .catch(err => console.error("Error cargando los datos:", err));
+        .catch(err => console.error("Error al cargar datos:", err));
 
-    function buscar() {
-        const query = document.getElementById('searchInput').value.trim().toLowerCase();
-        const card = document.getElementById('resultCard');
-        const noRes = document.getElementById('noResult');
-        
-        card.style.display = 'none';
-        noRes.style.display = 'none';
+    function consultar() {
+        const input = document.getElementById('cedulaInput').value.trim();
+        const resultBox = document.getElementById('resultBox');
+        const errorMsg = document.getElementById('errorMsg');
 
-        if (!query) return;
+        resultBox.style.display = 'none';
+        errorMsg.style.display = 'none';
 
-        const encontrado = estudiantes.find(est => 
-            (est.Cédula && est.Cédula.toString() === query) ||
-            (est.Nombre && est.Nombre.toLowerCase().includes(query)) ||
-            (est.Apellido && est.Apellido.toLowerCase().includes(query)) ||
-            (`${est.Nombre} ${est.Apellido}`.toLowerCase().includes(query))
-        );
+        if (!input) return;
 
-        if (encontrado) {
-            document.getElementById('resNombre').innerText = `${encontrado.Nombre} ${encontrado.Apellido}`;
-            document.getElementById('resCedula').innerText = encontrado.Cédula || 'N/A';
-            document.getElementById('resCursar').innerText = encontrado.Cursar || 'Pendiente';
-            card.style.display = 'block';
+        // Limpiar el string para comparar únicamente números de cédula
+        const cleanCedula = input.replace(/\D/g, '');
+
+        const estudiante = estudiantes.find(e => e.Cédula.toString() === cleanCedula);
+
+        if (estudiante) {
+            document.getElementById('resNombre').innerText = estudiante.Nombre;
+            document.getElementById('resApellido').innerText = estudiante.Apellido;
+            document.getElementById('resNivel').innerText = estudiante.Cursar;
+            resultBox.style.display = 'block';
         } else {
-            noRes.style.display = 'block';
+            errorMsg.style.display = 'block';
         }
     }
 
-    // Permitir buscar al presionar Enter
-    document.getElementById('searchInput').addEventListener('keypress', function (e) {
+    document.getElementById('cedulaInput').addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
-            buscar();
+            consultar();
         }
     });
 </script>
