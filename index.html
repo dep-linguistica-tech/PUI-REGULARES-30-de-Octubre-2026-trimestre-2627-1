@@ -1,278 +1,160 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>UNIMET - Consulta PUI</title>
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    }
-    body {
-      background-color: #f5f5f7;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      padding: 20px;
-    }
-    .card {
-      background: #ffffff;
-      border-radius: 16px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-      width: 100%;
-      max-width: 440px;
-      padding: 32px 24px;
-      text-align: center;
-      border-top: 6px solid #f26522;
-    }
-    .logo-text {
-      color: #f26522;
-      font-size: 28px;
-      font-weight: 800;
-      letter-spacing: 1px;
-      margin-bottom: 8px;
-    }
-    .sub-title {
-      color: #1a365d;
-      font-size: 15px;
-      font-weight: 700;
-      line-height: 1.4;
-      margin-bottom: 24px;
-      text-transform: uppercase;
-    }
-    .input-group {
-      margin-bottom: 16px;
-    }
-    input[type="text"] {
-      width: 100%;
-      padding: 12px 16px;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-      font-size: 15px;
-      text-align: center;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-    input[type="text"]:focus {
-      border-color: #f26522;
-    }
-    button {
-      width: 100%;
-      background-color: #f26522;
-      color: white;
-      border: none;
-      padding: 12px;
-      border-radius: 8px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
-    button:hover {
-      background-color: #d95318;
-    }
-    .result-box {
-      margin-top: 24px;
-      padding: 20px;
-      border-radius: 8px;
-      display: none;
-    }
-    .result-box.success {
-      background-color: #e6f4ea;
-      border: 1px solid #ceead6;
-      display: block;
-    }
-    .result-box.error {
-      background-color: #fce8e6;
-      border: 1px solid #fad2cf;
-      color: #c5221f;
-      display: block;
-    }
-    .student-name {
-      color: #1a365d;
-      font-size: 18px;
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
-    .level-label {
-      color: #5f6368;
-      font-size: 13px;
-      margin-bottom: 4px;
-    }
-    .level-assigned {
-      color: #0d652d;
-      font-size: 20px;
-      font-weight: 800;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta de Resultados - Prueba de Nivelación</title>
+    <style>
+        :root {
+            --primary: #004085;
+            --bg: #f4f6f9;
+            --card: #ffffff;
+            --text: #333333;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            background-color: var(--card);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+        h1 {
+            color: var(--primary);
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            outline: none;
+        }
+        input[type="text"]:focus {
+            border-color: var(--primary);
+        }
+        button {
+            padding: 12px 20px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background-color: #002752;
+        }
+        .result-card {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background-color: #fdfdfd;
+            display: none;
+        }
+        .result-item {
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+        .result-item strong {
+            color: #555;
+        }
+        .badge {
+            display: inline-block;
+            padding: 6px 12px;
+            background-color: #28a745;
+            color: white;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .no-result {
+            color: #d9534f;
+            text-align: center;
+            margin-top: 15px;
+            display: none;
+        }
+    </style>
 </head>
 <body>
 
-  <div class="card">
-    <div class="logo-text">UNIMET</div>
-    <div class="sub-title">
-      PUI REGULARES 30 DE OCTUBRE<br>
-      TRIMESTRE 2627-1
+<div class="container">
+    <h1>Consulta de Resultados de Ubicación</h1>
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Ingrese Cédula, Nombre o Apellido...">
+        <button onclick="buscar()">Buscar</button>
     </div>
-    
-    <div class="input-group">
-      <input type="text" id="cedulaInput" placeholder="Ingrese su Cédula" onkeypress="handleKeyPress(event)">
+
+    <div id="noResult" class="no-result">No se encontraron registros con el criterio ingresado.</div>
+
+    <div id="resultCard" class="result-card">
+        <div class="result-item"><strong>Estudiante:</strong> <span id="resNombre"></span></div>
+        <div class="result-item"><strong>Cédula:</strong> <span id="resCedula"></span></div>
+        <div class="result-item"><strong>Nivel a Cursar:</strong> <span id="resCursar" class="badge"></span></div>
     </div>
-    
-    <button onclick="buscar()">Consultar</button>
+</div>
 
-    <div id="resultBox" class="result-box">
-      <div id="studentName" class="student-name"></div>
-      <div class="level-label">Nivel Asignado:</div>
-      <div id="levelAssigned" class="level-assigned"></div>
-    </div>
-  </div>
+<script>
+    // Carga de datos de los 107 estudiantes desde resultados.json
+    let estudiantes = [];
 
-  <script>
-    const data = [
-      {"Nombre": "Valeria", "Apellido": "Boubou", "Cédula": 32884554, "Cursar": "Inglés I"},
-      {"Nombre": "Juan", "Apellido": "Garcia", "Cédula": 29751535, "Cursar": "Inglés I"},
-      {"Nombre": "Alvaro", "Apellido": "Carrero", "Cédula": 30888647, "Cursar": "Inglés I"},
-      {"Nombre": "Sebastian", "Apellido": "Mora", "Cédula": 32050770, "Cursar": "Inglés I"},
-      {"Nombre": "Elianna", "Apellido": "Ponte", "Cédula": 30613599, "Cursar": "Inglés I"},
-      {"Nombre": "Luis", "Apellido": "Cappellucci", "Cédula": 32802583, "Cursar": "Inglés I"},
-      {"Nombre": "Allan", "Apellido": "Moreno", "Cédula": 32904621, "Cursar": "Inglés I"},
-      {"Nombre": "Massimo", "Apellido": "Gramcko", "Cédula": 30394927, "Cursar": "Inglés I"},
-      {"Nombre": "Carlos", "Apellido": "Montoya", "Cédula": 28314535, "Cursar": "Inglés I"},
-      {"Nombre": "Jose", "Apellido": "Saggiomo", "Cédula": 30124186, "Cursar": "Inglés I"},
-      {"Nombre": "Aaron", "Apellido": "Gudino", "Cédula": 29551923, "Cursar": "Inglés I"},
-      {"Nombre": "Enrique", "Apellido": "Dopazo", "Cédula": 30674231, "Cursar": "Inglés I"},
-      {"Nombre": "Valeria", "Apellido": "Roncali", "Cédula": 28492688, "Cursar": "Inglés I"},
-      {"Nombre": "Albany", "Apellido": "Andrade", "Cédula": 26510331, "Cursar": "Inglés I"},
-      {"Nombre": "Valeria", "Apellido": "Zabala", "Cédula": 31523309, "Cursar": "Inglés I"},
-      {"Nombre": "Camila", "Apellido": "Ferro", "Cédula": 31308430, "Cursar": "Inglés I"},
-      {"Nombre": "Alessandro", "Apellido": "Gramcko", "Cédula": 30394928, "Cursar": "Inglés I"},
-      {"Nombre": "Sofia", "Apellido": "Villanueva", "Cédula": 30793652, "Cursar": "Inglés I"},
-      {"Nombre": "Eduardo", "Apellido": "Perez", "Cédula": 28447213, "Cursar": "Inglés I"},
-      {"Nombre": "Laura", "Apellido": "Ponte", "Cédula": 31377418, "Cursar": "Inglés II"},
-      {"Nombre": "Pierre", "Apellido": "Feletto", "Cédula": 31984783, "Cursar": "Inglés II"},
-      {"Nombre": "Alexa", "Apellido": "Cardona", "Cédula": 33504622, "Cursar": "Inglés II"},
-      {"Nombre": "Anabella", "Apellido": "Miranda", "Cédula": 32299746, "Cursar": "Inglés II"},
-      {"Nombre": "Sofia", "Apellido": "De faria", "Cédula": 32622831, "Cursar": "Inglés II"},
-      {"Nombre": "Andrea", "Apellido": "Cova", "Cédula": 24223870, "Cursar": "Inglés II"},
-      {"Nombre": "Roger", "Apellido": "Loor", "Cédula": 30495937, "Cursar": "Inglés II"},
-      {"Nombre": "Gabriele", "Apellido": "Di Nardo", "Cédula": 31745565, "Cursar": "Inglés II"},
-      {"Nombre": "Fernando", "Apellido": "Fuenmayor", "Cédula": 32375260, "Cursar": "Inglés II"},
-      {"Nombre": "Sarit", "Apellido": "Serfaty", "Cédula": 30793284, "Cursar": "Inglés II"},
-      {"Nombre": "Agatha", "Apellido": "Rojas", "Cédula": 32862419, "Cursar": "Inglés II"},
-      {"Nombre": "Rashel", "Apellido": "Chahwan", "Cédula": 32337032, "Cursar": "Inglés II"},
-      {"Nombre": "Ana", "Apellido": "Castillo", "Cédula": 30727172, "Cursar": "Inglés III"},
-      {"Nombre": "Tomas", "Apellido": "Ortigoza", "Cédula": 31516242, "Cursar": "Inglés III"},
-      {"Nombre": "Sabrina", "Apellido": "Chang", "Cédula": 27671345, "Cursar": "Inglés III"},
-      {"Nombre": "Oliver", "Apellido": "Meignen", "Cédula": 33610701, "Cursar": "Inglés III"},
-      {"Nombre": "Zacky", "Apellido": "Grabli", "Cédula": 32142515, "Cursar": "Inglés III"},
-      {"Nombre": "Cristian", "Apellido": "Yacoub", "Cédula": 32348667, "Cursar": "Inglés III"},
-      {"Nombre": "Jonathan", "Apellido": "Gross", "Cédula": 32560399, "Cursar": "Inglés III"},
-      {"Nombre": "Abraham", "Apellido": "Benchimol", "Cédula": 32877270, "Cursar": "Inglés III"},
-      {"Nombre": "Karen", "Apellido": "Cortes", "Cédula": 16429465, "Cursar": "Inglés III"},
-      {"Nombre": "Jesus", "Apellido": "Miralles", "Cédula": 32750913, "Cursar": "Inglés III"},
-      {"Nombre": "Gabriel", "Apellido": "Flores", "Cédula": 27588778, "Cursar": "Inglés III"},
-      {"Nombre": "Ricardo", "Apellido": "Perez", "Cédula": 30330558, "Cursar": "Inglés III"},
-      {"Nombre": "Maria", "Apellido": "Gonzalez", "Cédula": 30700012, "Cursar": "Inglés III"},
-      {"Nombre": "Julián", "Apellido": "Ochoa", "Cédula": 32348588, "Cursar": "Inglés III"},
-      {"Nombre": "Sofia", "Apellido": "Touma", "Cédula": 33251616, "Cursar": "Inglés III"},
-      {"Nombre": "Gustavo", "Apellido": "Pedroza", "Cédula": 33219652, "Cursar": "Inglés III"},
-      {"Nombre": "Valeria", "Apellido": "Aquino", "Cédula": 30750802, "Cursar": "Inglés III"},
-      {"Nombre": "Eduardo", "Apellido": "Urdaneta", "Cédula": 32534775, "Cursar": "Inglés IV"},
-      {"Nombre": "Samuel", "Apellido": "Garcia", "Cédula": 31377637, "Cursar": "Inglés IV"},
-      {"Nombre": "Ricardo", "Apellido": "Cichetti", "Cédula": 33292344, "Cursar": "Inglés IV"},
-      {"Nombre": "Agostinelli", "Apellido": "Marco", "Cédula": 33728148, "Cursar": "Inglés IV"},
-      {"Nombre": "Gabriela", "Apellido": "Guerra", "Cédula": 30496320, "Cursar": "Inglés IV"},
-      {"Nombre": "Marco", "Apellido": "Martinelli", "Cédula": 32751059, "Cursar": "Inglés IV"},
-      {"Nombre": "Gabriel", "Apellido": "Dominguez", "Cédula": 33292339, "Cursar": "Inglés IV"},
-      {"Nombre": "Andres", "Apellido": "Pita", "Cédula": 32348721, "Cursar": "Inglés IV"},
-      {"Nombre": "Camila", "Apellido": "Gil", "Cédula": 30142114, "Cursar": "Inglés IV"},
-      {"Nombre": "Alex", "Apellido": "Leiderman", "Cédula": 32242382, "Cursar": "Inglés IV"},
-      {"Nombre": "Jose", "Apellido": "Rivas", "Cédula": 32896802, "Cursar": "Inglés IV"},
-      {"Nombre": "Jose", "Apellido": "Gutierrez", "Cédula": 30496409, "Cursar": "Inglés IV"},
-      {"Nombre": "Juan", "Apellido": "Perez", "Cédula": 29780008, "Cursar": "Inglés IV"},
-      {"Nombre": "Luis", "Apellido": "Velasquez", "Cédula": 32052004, "Cursar": "Inglés IV"},
-      {"Nombre": "Diego", "Apellido": "Layrisse", "Cédula": 33432427, "Cursar": "Inglés IV"},
-      {"Nombre": "Paolo", "Apellido": "Falcone", "Cédula": 30942750, "Cursar": "Inglés V"},
-      {"Nombre": "Camila", "Apellido": "Pachano", "Cédula": 32503293, "Cursar": "Inglés V"},
-      {"Nombre": "Vanessa", "Apellido": "Lungavite", "Cédula": 31661630, "Cursar": "Inglés V"},
-      {"Nombre": "Osorio", "Apellido": "Guillcer", "Cédula": 28154411, "Cursar": "Inglés V"},
-      {"Nombre": "Patricia", "Apellido": "Gomez", "Cédula": 33017155, "Cursar": "Inglés V"},
-      {"Nombre": "Antonio", "Apellido": "Osso", "Cédula": 31071635, "Cursar": "Inglés V"},
-      {"Nombre": "Michelle", "Apellido": "Viloria", "Cédula": 28135995, "Cursar": "Inglés V"},
-      {"Nombre": "Ahmad", "Apellido": "Awada", "Cédula": 33854795, "Cursar": "Inglés V"},
-      {"Nombre": "Fabiana", "Apellido": "Giusto", "Cédula": 31307438, "Cursar": "Inglés V"},
-      {"Nombre": "Clarissa", "Apellido": "Sanabria", "Cédula": 30153809, "Cursar": "Inglés V"},
-      {"Nombre": "Marcos", "Apellido": "Sanoja", "Cédula": 23950403, "Cursar": "Inglés V"},
-      {"Nombre": "Leonardo", "Apellido": "Betancourt", "Cédula": 29678173, "Cursar": "Inglés V"},
-      {"Nombre": "Camila", "Apellido": "Vivas", "Cédula": 33432581, "Cursar": "Inglés V"},
-      {"Nombre": "Massimo", "Apellido": "Restuccia", "Cédula": 31593464, "Cursar": "Inglés V"},
-      {"Nombre": "Santiago", "Apellido": "Marquez", "Cédula": 33852816, "Cursar": "Eximido"},
-      {"Nombre": "Rosario", "Apellido": "Fustero", "Cédula": 32671675, "Cursar": "Eximido"},
-      {"Nombre": "Jorge", "Apellido": "Wahbeh", "Cédula": 14891155, "Cursar": "Eximido"},
-      {"Nombre": "Valeria", "Apellido": "Castro", "Cédula": 32751413, "Cursar": "Eximido"},
-      {"Nombre": "Carlota", "Apellido": "Perera", "Cédula": 31985576, "Cursar": "Eximido"},
-      {"Nombre": "Ivana", "Apellido": "Vilches", "Cédula": 32538648, "Cursar": "Eximido"},
-      {"Nombre": "Giselle", "Apellido": "Esclasans", "Cédula": 30715145, "Cursar": "Eximido"},
-      {"Nombre": "George", "Apellido": "Mekel", "Cédula": 32299800, "Cursar": "Eximido"},
-      {"Nombre": "Victoria", "Apellido": "Lungavite", "Cédula": 31661633, "Cursar": "Eximido"},
-      {"Nombre": "Jose", "Apellido": "Perez", "Cédula": 32862918, "Cursar": "Eximido"},
-      {"Nombre": "Isbelt", "Apellido": "Sarmiento", "Cédula": 30715530, "Cursar": "Eximido"},
-      {"Nombre": "Jose", "Apellido": "Colmenarez", "Cédula": 31843020, "Cursar": "Eximido"},
-      {"Nombre": "Leopoldo", "Apellido": "Uzcategui", "Cédula": 32759386, "Cursar": "Eximido"},
-      {"Nombre": "Alessia", "Apellido": "Aurrecoechea", "Cédula": 31046014, "Cursar": "Eximido"},
-      {"Nombre": "Camila", "Apellido": "Rojas", "Cédula": 31307813, "Cursar": "Eximido"},
-      {"Nombre": "Luis", "Apellido": "Noriega", "Cédula": 29582357, "Cursar": "Eximido"},
-      {"Nombre": "Aran", "Apellido": "Sassani", "Cédula": 31661679, "Cursar": "Eximido"},
-      {"Nombre": "Elida", "Apellido": "Katime", "Cédula": 27532535, "Cursar": "Eximido"},
-      {"Nombre": "Bettiba", "Apellido": "Carnevali", "Cédula": 30497667, "Cursar": "Eximido"},
-      {"Nombre": "Gabriel", "Apellido": "Madonna", "Cédula": 30114951, "Cursar": "Eximido"},
-      {"Nombre": "Natalia", "Apellido": "Nieto", "Cédula": 32672118, "Cursar": "Eximido"},
-      {"Nombre": "Maria", "Apellido": "Martinez", "Cédula": 30124840, "Cursar": "Eximido"},
-      {"Nombre": "Alexandra", "Apellido": "Valle", "Cédula": 30358627, "Cursar": "Eximido"},
-      {"Nombre": "Samuel", "Apellido": "Yusti", "Cédula": 25029961, "Cursar": "Eximido"},
-      {"Nombre": "Santiago", "Apellido": "Jimenez", "Cédula": 31460841, "Cursar": "Eximido"},
-      {"Nombre": "Lavie", "Apellido": "Sophia", "Cédula": 30673764, "Cursar": "Eximido"},
-      {"Nombre": "Ignacio", "Apellido": "Llorente", "Cédula": 22908567, "Cursar": "Eximido"},
-      {"Nombre": "Alberto", "Apellido": "Arteaga", "Cédula": 27028801, "Cursar": "Eximido"},
-      {"Nombre": "Juan", "Apellido": "Balza", "Cédula": 32896495, "Cursar": "Eximido"},
-      {"Nombre": "Diego", "Apellido": "Villapol", "Cédula": 90403189, "Cursar": "Eximido"}
-    ];
-
-    function handleKeyPress(e) {
-      if (e.key === 'Enter') {
-        buscar();
-      }
-    }
+    fetch('resultados.json')
+        .then(response => response.json())
+        .then(data => { estudiantes = data; })
+        .catch(err => console.error("Error cargando los datos:", err));
 
     function buscar() {
-      const inputVal = document.getElementById('cedulaInput').value.replace(/\D/g, '');
-      const resultBox = document.getElementById('resultBox');
+        const query = document.getElementById('searchInput').value.trim().toLowerCase();
+        const card = document.getElementById('resultCard');
+        const noRes = document.getElementById('noResult');
+        
+        card.style.display = 'none';
+        noRes.style.display = 'none';
 
-      if (!inputVal) {
-        resultBox.className = "result-box error";
-        resultBox.innerHTML = "Por favor, ingrese un número de cédula válido.";
-        return;
-      }
+        if (!query) return;
 
-      const alumno = data.find(item => String(item['Cédula']) === inputVal);
+        const encontrado = estudiantes.find(est => 
+            (est.Cédula && est.Cédula.toString() === query) ||
+            (est.Nombre && est.Nombre.toLowerCase().includes(query)) ||
+            (est.Apellido && est.Apellido.toLowerCase().includes(query)) ||
+            (`${est.Nombre} ${est.Apellido}`.toLowerCase().includes(query))
+        );
 
-      if (alumno) {
-        resultBox.className = "result-box success";
-        resultBox.innerHTML = `
-          <div class="student-name">${alumno.Nombre} ${alumno.Apellido}</div>
-          <div class="level-label">Nivel Asignado:</div>
-          <div class="level-assigned">${alumno.Cursar}</div>
-        `;
-      } else {
-        resultBox.className = "result-box error";
-        resultBox.innerHTML = "Cédula no encontrada. Por favor, verifique el número e intente de nuevo.";
-      }
+        if (encontrado) {
+            document.getElementById('resNombre').innerText = `${encontrado.Nombre} ${encontrado.Apellido}`;
+            document.getElementById('resCedula').innerText = encontrado.Cédula || 'N/A';
+            document.getElementById('resCursar').innerText = encontrado.Cursar || 'Pendiente';
+            card.style.display = 'block';
+        } else {
+            noRes.style.display = 'block';
+        }
     }
-  </script>
+
+    // Permitir buscar al presionar Enter
+    document.getElementById('searchInput').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            buscar();
+        }
+    });
+</script>
+
 </body>
 </html>
