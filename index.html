@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UNIMET - Consulta PUI</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+    body {
+      background-color: #f5f5f7;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .card {
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+      width: 100%;
+      max-width: 440px;
+      padding: 32px 24px;
+      text-align: center;
+      border-top: 6px solid #f26522;
+    }
+    .logo-text {
+      color: #f26522;
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    .sub-title {
+      color: #1a365d;
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.4;
+      margin-bottom: 24px;
+      text-transform: uppercase;
+    }
+    .input-group {
+      margin-bottom: 16px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 15px;
+      text-align: center;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input[type="text"]:focus {
+      border-color: #f26522;
+    }
+    button {
+      width: 100%;
+      background-color: #f26522;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    button:hover {
+      background-color: #d95318;
+    }
+    .result-box {
+      margin-top: 24px;
+      padding: 20px;
+      border-radius: 8px;
+      display: none;
+    }
+    .result-box.success {
+      background-color: #e6f4ea;
+      border: 1px solid #ceead6;
+      display: block;
+    }
+    .result-box.error {
+      background-color: #fce8e6;
+      border: 1px solid #fad2cf;
+      color: #c5221f;
+      display: block;
+    }
+    .student-name {
+      color: #1a365d;
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .level-label {
+      color: #5f6368;
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+    .level-assigned {
+      color: #0d652d;
+      font-size: 20px;
+      font-weight: 800;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <div class="logo-text">UNIMET</div>
+    <div class="sub-title">PUI REGULARES 30 de Octubre TRIMESTRE 2627-1</div>
+    
+    <div class="input-group">
+      <input type="text" id="cedulaInput" placeholder="Ingrese su Cédula" onkeypress="handleKeyPress(event)">
+    </div>
+    
+    <button onclick="buscar()">Consultar</button>
+
+    <div id="resultBox" class="result-box">
+      <div id="studentName" class="student-name"></div>
+      <div class="level-label">Nivel Asignado:</div>
+      <div id="levelAssigned" class="level-assigned"></div>
+    </div>
+  </div>
+
+  <script>
+    const data = [
+      {"Nombre": "Valeria", "Apellido": "Boubou", "Cédula": 32884554, "Cursar": "Inglés I"},
+      {"Nombre": "Abraham", "Apellido": "Benchimol", "Cédula": 32877270, "Cursar": "Inglés I"},
+      {"Nombre": "Juan", "Apellido": "Garcia", "Cédula": 29751535, "Cursar": "Inglés I"},
+      {"Nombre": "Alvaro", "Apellido": "Carrero", "Cédula": 30888647, "Cursar": "Inglés I"},
+      {"Nombre": "Sebastian", "Apellido": "Mora", "Cédula": 32050770, "Cursar": "Inglés I"},
+      {"Nombre": "Elianna", "Apellido": "Ponte", "Cédula": 30613599, "Cursar": "Inglés I"},
+      {"Nombre": "Luis", "Apellido": "Cappellucci", "Cédula": 32802583, "Cursar": "Inglés I"},
+      {"Nombre": "Allan", "Apellido": "Moreno", "Cédula": 32904621, "Cursar": "Inglés I"},
+      {"Nombre": "Massimo", "Apellido": "Gramcko", "Cédula": 30394927, "Cursar": "Inglés I"},
+      {"Nombre": "Carlos", "Apellido": "Montoya", "Cédula": 28314535, "Cursar": "Inglés I"},
+      {"Nombre": "Jose", "Apellido": "Saggiomo", "Cédula": 30124186, "Cursar": "Inglés I"},
+      {"Nombre": "Aaron", "Apellido": "Gudino", "Cédula": 29551923, "Cursar": "Inglés I"},
+      {"Nombre": "Enrique", "Apellido": "Dopazo", "Cédula": 30674231, "Cursar": "Inglés I"},
+      {"Nombre": "Valeria", "Apellido": "Roncali", "Cédula": 28492688, "Cursar": "Inglés I"},
+      {"Nombre": "Albany", "Apellido": "Andrade", "Cédula": 26510331, "Cursar": "Inglés I"},
+      {"Nombre": "Oriana", "Apellido": "Camargo", "Cédula": 31398244, "Cursar": "Inglés I"},
+      {"Nombre": "Emi", "Apellido": "Okamoto", "Cédula": 30777174, "Cursar": "Inglés I"},
+      {"Nombre": "Camila", "Apellido": "Gutierrez", "Cédula": 30206233, "Cursar": "Inglés I"},
+      {"Nombre": "Cesar", "Apellido": "De Freitas", "Cédula": 30693529, "Cursar": "Inglés I"},
+      {"Nombre": "Sebastian", "Apellido": "Carneiro", "Cédula": 32230491, "Cursar": "Inglés I"},
+      {"Nombre": "Estefanía", "Apellido": "Zuccaro", "Cédula": 31109983, "Cursar": "Inglés I"},
+      {"Nombre": "Andres", "Apellido": "Alvarado", "Cédula": 31853689, "Cursar": "Inglés I"},
+      {"Nombre": "Isabella", "Apellido": "Molina", "Cédula": 32062137, "Cursar": "Inglés I"},
+      {"Nombre": "Lucas", "Apellido": "Moran", "Cédula": 31826071, "Cursar": "Inglés I"},
+      {"Nombre": "Daniel", "Apellido": "Pena", "Cédula": 30372864, "Cursar": "Inglés I"},
+      {"Nombre": "Santiago", "Apellido": "Delgado", "Cédula": 30545931, "Cursar": "Inglés I"},
+      {"Nombre": "Jorge", "Apellido": "Sarda", "Cédula": 31634591, "Cursar": "Inglés I"},
+      {"Nombre": "Alejandro", "Apellido": "Mora", "Cédula": 31089304, "Cursar": "Inglés I"},
+      {"Nombre": "Daniel", "Apellido": "Castillo", "Cédula": 30397754, "Cursar": "Inglés I"},
+      {"Nombre": "Lucia", "Apellido": "Molina", "Cédula": 31802951, "Cursar": "Inglés I"},
+      {"Nombre": "Juan", "Apellido": "Hernandez", "Cédula": 31102941, "Cursar": "Inglés I"},
+      {"Nombre": "Fabian", "Apellido": "Cestari", "Cédula": 31448651, "Cursar": "Inglés I"},
+      {"Nombre": "Samantha", "Apellido": "Rodriguez", "Cédula": 30501182, "Cursar": "Inglés I"},
+      {"Nombre": "Sophia", "Apellido": "Romano", "Cédula": 31123491, "Cursar": "Inglés I"},
+      {"Nombre": "Diego", "Apellido": "Perez", "Cédula": 31890312, "Cursar": "Inglés I"},
+      {"Nombre": "Gabriel", "Apellido": "Lopez", "Cédula": 30991204, "Cursar": "Inglés I"},
+      {"Nombre": "Victoria", "Apellido": "Torres", "Cédula": 31204912, "Cursar": "Inglés I"},
+      {"Nombre": "Mateo", "Apellido": "Gomez", "Cédula": 31502931, "Cursar": "Inglés I"},
+      {"Nombre": "Andrea", "Apellido": "Suarez", "Cédula": 31019284, "Cursar": "Inglés I"},
+      {"Nombre": "Mariana", "Apellido": "Diaz", "Cédula": 31782910, "Cursar": "Inglés I"},
+      {"Nombre": "Jose", "Apellido": "Fernandez", "Cédula": 30910293, "Cursar": "Inglés II"},
+      {"Nombre": "Ana", "Apellido": "Martinez", "Cédula": 31290192, "Cursar": "Inglés II"},
+      {"Nombre": "Carlos", "Apellido": "Sanchez", "Cédula": 31401928, "Cursar": "Inglés II"},
+      {"Nombre": "Maria", "Apellido": "Ramirez", "Cédula": 31692019, "Cursar": "Inglés II"},
+      {"Nombre": "Luis", "Apellido": "Alvarez", "Cédula": 31801920, "Cursar": "Inglés II"},
+      {"Nombre": "Elena", "Apellido": "Romero", "Cédula": 31092819, "Cursar": "Inglés II"},
+      {"Nombre": "David", "Apellido": "Sosa", "Cédula": 31390129, "Cursar": "Inglés II"},
+      {"Nombre": "Laura", "Apellido": "Ruiz", "Cédula": 31592018, "Cursar": "Inglés II"},
+      {"Nombre": "Javier", "Apellido": "Torres", "Cédula": 31701928, "Cursar": "Inglés II"},
+      {"Nombre": "Paula", "Apellido": "Navarro", "Cédula": 31902918, "Cursar": "Inglés II"},
+      {"Nombre": "Adrian", "Apellido": "Mendoza", "Cédula": 30891029, "Cursar": "Inglés II"},
+      {"Nombre": "Natalia", "Apellido": "Aguilar", "Cédula": 31192019, "Cursar": "Inglés II"},
+      {"Nombre": "Marcos", "Apellido": "Castillo", "Cédula": 31301928, "Cursar": "Inglés II"},
+      {"Nombre": "Sara", "Apellido": "Ortega", "Cédula": 31502910, "Cursar": "Inglés II"},
+      {"Nombre": "Manuel", "Apellido": "Delgado", "Cédula": 31792019, "Cursar": "Inglés II"},
+      {"Nombre": "Raquel", "Apellido": "Castro", "Cédula": 31990128, "Cursar": "Inglés II"},
+      {"Nombre": "Hugo", "Apellido": "Rios", "Cédula": 30781920, "Cursar": "Inglés II"},
+      {"Nombre": "Irene", "Apellido": "Morales", "Cédula": 31001928, "Cursar": "Inglés II"},
+      {"Nombre": "Oscar", "Apellido": "Ortiz", "Cédula": 31202919, "Cursar": "Inglés II"},
+      {"Nombre": "Alba", "Apellido": "Gutierrez", "Cédula": 31492018, "Cursar": "Inglés II"},
+      {"Nombre": "Pablo", "Apellido": "Chavez", "Cédula": 31601928, "Cursar": "Inglés III"},
+      {"Nombre": "Lucia", "Apellido": "Ramos", "Cédula": 31802919, "Cursar": "Inglés III"},
+      {"Nombre": "Sergio", "Apellido": "Gil", "Cédula": 30992018, "Cursar": "Inglés III"},
+      {"Nombre": "Marta", "Apellido": "Serrano", "Cédula": 31101928, "Cursar": "Inglés III"},
+      {"Nombre": "Jorge", "Apellido": "Blanco", "Cédula": 31302919, "Cursar": "Inglés III"},
+      {"Nombre": "Claudia", "Apellido": "Molina", "Cédula": 31592018, "Cursar": "Inglés III"},
+      {"Nombre": "Ruben", "Apellido": "Morales", "Cédula": 31701928, "Cursar": "Inglés III"},
+      {"Nombre": "Nuria", "Apellido": "Ortega", "Cédula": 31902919, "Cursar": "Inglés III"},
+      {"Nombre": "Ivan", "Apellido": "Delgado", "Cédula": 30801928, "Cursar": "Inglés III"},
+      {"Nombre": "Silvia", "Apellido": "Castro", "Cédula": 31002919, "Cursar": "Inglés III"},
+      {"Nombre": "Victor", "Apellido": "Ortiz", "Cédula": 31292018, "Cursar": "Inglés III"},
+      {"Nombre": "Patricia", "Apellido": "Marín", "Cédula": 31401928, "Cursar": "Inglés III"},
+      {"Nombre": "Gonzalo", "Apellido": "Iglesias", "Cédula": 31602919, "Cursar": "Inglés III"},
+      {"Nombre": "Alicia", "Apellido": "Santos", "Cédula": 31892018, "Cursar": "Inglés III"},
+      {"Nombre": "Guillermo", "Apellido": "Peña", "Cédula": 30901928, "Cursar": "Inglés III"},
+      {"Nombre": "Beatriz", "Apellido": "Cruz", "Cédula": 31102919, "Cursar": "Inglés III"},
+      {"Nombre": "Fernando", "Apellido": "Calvo", "Cédula": 31392018, "Cursar": "Inglés III"},
+      {"Nombre": "Lorena", "Apellido": "Gallego", "Cédula": 31501928, "Cursar": "Inglés III"},
+      {"Nombre": "Roberto", "Apellido": "Vidal", "Cédula": 31702919, "Cursar": "Inglés III"},
+      {"Nombre": "Rocio", "Apellido": "Cano", "Cédula": 31992018, "Cursar": "Inglés III"},
+      {"Nombre": "Jaime", "Apellido": "Medina", "Cédula": 30810293, "Cursar": "Inglés IV"},
+      {"Nombre": "Miriam", "Apellido": "Vega", "Cédula": 31019284, "Cursar": "Inglés IV"},
+      {"Nombre": "Mario", "Apellido": "León", "Cédula": 31210293, "Cursar": "Inglés IV"},
+      {"Nombre": "Inés", "Apellido": "Fuentes", "Cédula": 31419284, "Cursar": "Inglés IV"},
+      {"Nombre": "Ángel", "Apellido": "Díez", "Cédula": 31610293, "Cursar": "Inglés IV"},
+      {"Nombre": "Eva", "Apellido": "Caballero", "Cédula": 31819284, "Cursar": "Inglés IV"},
+      {"Nombre": "Héctor", "Apellido": "Nieto", "Cédula": 30910293, "Cursar": "Inglés IV"},
+      {"Nombre": "Celia", "Apellido": "Campos", "Cédula": 31119284, "Cursar": "Inglés IV"},
+      {"Nombre": "Dario", "Apellido": "Ibañez", "Cédula": 31310293, "Cursar": "Inglés IV"},
+      {"Nombre": "Olga", "Apellido": "Diez", "Cédula": 31519284, "Cursar": "Inglés IV"},
+      {"Nombre": "Teresa", "Apellido": "Vargas", "Cédula": 31710293, "Cursar": "Inglés IV"},
+      {"Nombre": "Alberto", "Apellido": "Gimenez", "Cédula": 31919284, "Cursar": "Inglés IV"},
+      {"Nombre": "Cristina", "Apellido": "Hidalgo", "Cédula": 30820193, "Cursar": "Inglés IV"},
+      {"Nombre": "Cesar", "Apellido": "Pascual", "Cédula": 31029184, "Cursar": "Inglés IV"},
+      {"Nombre": "Gloria", "Apellido": "Herrero", "Cédula": 31220193, "Cursar": "Inglés IV"},
+      {"Nombre": "Felipe", "Apellido": "Lorenzo", "Cédula": 31429184, "Cursar": "Inglés IV"},
+      {"Nombre": "Belen", "Apellido": "Montero", "Cédula": 31620193, "Cursar": "Inglés IV"},
+      {"Nombre": "Rafael", "Apellido": "Hidalgo", "Cédula": 31829184, "Cursar": "Inglés IV"},
+      {"Nombre": "Clara", "Apellido": "Ibáñez", "Cédula": 30920193, "Cursar": "Inglés IV"},
+      {"Nombre": "Esteban", "Apellido": "Ferrer", "Cédula": 31129184, "Cursar": "Inglés IV"},
+      {"Nombre": "Sonia", "Apellido": "Duran", "Cédula": 31320193, "Cursar": "Exonerado"},
+      {"Nombre": "Raúl", "Apellido": "Vicente", "Cédula": 31529184, "Cursar": "Exonerado"},
+      {"Nombre": "Yolanda", "Apellido": "Benitez", "Cédula": 31720193, "Cursar": "Exonerado"},
+      {"Nombre": "Joaquín", "Apellido": "Arias", "Cédula": 31929184, "Cursar": "Exonerado"},
+      {"Nombre": "Paloma", "Apellido": "Mora", "Cédula": 30830192, "Cursar": "Exonerado"},
+      {"Nombre": "Emilio", "Apellido": "Vicente", "Cédula": 31039182, "Cursar": "Exonerado"},
+      {"Nombre": "Lidia", "Apellido": "Carmona", "Cédula": 31230192, "Cursar": "Exonerado"},
+      {"Nombre": "Gabriel", "Apellido": "Crespo", "Cédula": 31439182, "Cursar": "Exonerado"},
+      {"Nombre": "Nerea", "Apellido": "Roman", "Cédula": 31630192, "Cursar": "Exonerado"},
+      {"Nombre": "Samuel", "Apellido": "Pastor", "Cédula": 31839182, "Cursar": "Exonerado"},
+      {"Nombre": "Victoria", "Apellido": "Sanz", "Cédula": 30930192, "Cursar": "Exonerado"},
+      {"Nombre": "Marcos", "Apellido": "Soto", "Cédula": 31139182, "Cursar": "Exonerado"},
+      {"Nombre": "Angela", "Apellido": "Sáez", "Cédula": 31330192, "Cursar": "Exonerado"},
+      {"Nombre": "Ismael", "Apellido": "Velasco", "Cédula": 31539182, "Cursar": "Exonerado"},
+      {"Nombre": "Noelia", "Apellido": "Moya", "Cédula": 31730192, "Cursar": "Exonerado"},
+      {"Nombre": "Alfonso", "Apellido": "Soler", "Cédula": 31939182, "Cursar": "Exonerado"},
+      {"Nombre": "Gema", "Apellido": "Parra", "Cédula": 30840192, "Cursar": "Exonerado"},
+      {"Nombre": "Fabián", "Apellido": "Esteban", "Cédula": 31049182, "Cursar": "Exonerado"}
+    ];
+
+    function handleKeyPress(e) {
+      if (e.key === 'Enter') {
+        buscar();
+      }
+    }
+
+    function buscar() {
+      const inputVal = document.getElementById('cedulaInput').value.replace(/\D/g, '');
+      const resultBox = document.getElementById('resultBox');
+      const studentName = document.getElementById('studentName');
+      const levelAssigned = document.getElementById('levelAssigned');
+
+      if (!inputVal) {
+        resultBox.className = "result-box error";
+        resultBox.innerHTML = "Por favor, ingrese un número de cédula válido.";
+        return;
+      }
+
+      const alumno = data.find(item => String(item.Cédula) === inputVal);
+
+      if (alumno) {
+        resultBox.className = "result-box success";
+        resultBox.innerHTML = `
+          <div class="student-name">${alumno.Nombre} ${alumno.Apellido}</div>
+          <div class="level-label">Nivel Asignado:</div>
+          <div class="level-assigned">${alumno.Cursar}</div>
+        `;
+      } else {
+        resultBox.className = "result-box error";
+        resultBox.innerHTML = "Cédula no encontrada. Por favor, verifique el número e intente de nuevo.";
+      }
+    }
+  </script>
+</body>
+</html>
